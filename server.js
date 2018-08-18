@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 // Connect to mLab database
 const db = encodeURI(require('./config/keys').mongoURI);
 
+
 mongoose
     .connect( db, { useNewUrlParser: true })
     .then(() => console.log("MongoDB connected!"))

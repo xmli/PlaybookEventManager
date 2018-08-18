@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import classnames from 'classnames';
+import * as moment from 'moment';
+// material-ui
+import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -16,14 +18,18 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+// styles
+import './PlaybookCard.css';
 
 const styles = theme => ({
   card: {
     maxWidth: 400,
+    height: "100%",
   },
   media: {
     height: 0,
-    paddingTop: '56.25%', // 16:9
+    paddingTop: '56.25%', // 16:9,
+    backgroundSize: 'contain',
   },
   actions: {
     display: 'flex',
@@ -54,15 +60,17 @@ class PlaybookCard extends React.Component {
   };
 
   render() {
+    // console.log(this.props);
+    
+    
     const { classes } = this.props;
 
     return (
-      <div>
         <Card className={classes.card}>
           <CardHeader
             avatar={
               <Avatar aria-label="Recipe" className={classes.avatar}>
-                R
+                {this.props.cardTitle[0]}
               </Avatar>
             }
             action={
@@ -70,18 +78,17 @@ class PlaybookCard extends React.Component {
                 <MoreVertIcon />
               </IconButton>
             }
-            title="Shrimp and Chorizo Paella"
-            subheader="September 14, 2016"
+            title={this.props.cardTitle}
+            subheader={<span>Due: <strong>{moment(this.props.cardDueDate).format("M/DD/YYYY")}</strong></span>}
           />
           <CardMedia
             className={classes.media}
-            image="https://www-media.stanford.edu/wp-content/uploads/2017/06/20191526/stanford-share.jpg"
-            title="Contemplative Reptile"
+            image={this.props.cardImageUrl}
+            title={this.props.title}
           />
           <CardContent>
             <Typography component="p">
-              This impressive paella is a perfect party dish and a fun meal to cook together with
-              your guests. Add 1 cup of frozen peas along with the mussels, if you like.
+              <span>{this.props.cardDescription}</span>
             </Typography>
           </CardContent>
           <CardActions className={classes.actions} disableActionSpacing>
@@ -132,13 +139,19 @@ class PlaybookCard extends React.Component {
             </CardContent>
           </Collapse>
         </Card>
-      </div>
     );
   }
 }
 
 PlaybookCard.propTypes = {
   classes: PropTypes.object.isRequired,
+  cardTitle: PropTypes.string.isRequired,
+  cardImageUrl: PropTypes.string.isRequired,
+  cardLinkUrl: PropTypes.string.isRequired,
+  cardDescription: PropTypes.string.isRequired,
+  cardDueDate: PropTypes.instanceOf(Date),
+  cardDateAdded: PropTypes.instanceOf(Date),
+  cardDateLastModified: PropTypes.instanceOf(Date)
 };
 
 export default withStyles(styles)(PlaybookCard);
