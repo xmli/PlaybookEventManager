@@ -1,97 +1,228 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classnames from 'classnames';
 import * as moment from 'moment';
 // material-ui
-import { withStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Badge from '@material-ui/core/Badge';
+import Button from '@material-ui/core/Button';
+
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
+
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import red from '@material-ui/core/colors/red';
+import Chip from '@material-ui/core/Chip';
+
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Input from '@material-ui/core/Input';
+
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-// styles
-import './PlaybookCard.css';
+
+import pink from '@material-ui/core/colors/pink';
+import blue from '@material-ui/core/colors/blue';
+import grey from '@material-ui/core/colors/grey';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
   card: {
-    maxWidth: 400,
     height: "100%",
+    boxShadow: "1px 5px 10px rgba(0,0,0,0.15)",
+    transition: "all 0.3s cubic-bezier(.25, .8, .25, 1)",
+    '&:hover': {
+      boxShadow: "1px 5px 25px rgba(0,0,0,0.25)"
+    }
   },
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9,
-    backgroundSize: 'contain',
+  // avatar: {
+  //   backgroundColor: pink[400],
+  // },
+  cardContent: {
+    paddingTop: "0",
+    paddingBottom: "18px"
   },
-  actions: {
-    display: 'flex',
+  chip: {
+    marginRight: theme.spacing.unit / 2,
   },
-  expand: {
-    transform: 'rotate(0deg)',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-    marginLeft: 'auto',
-    [theme.breakpoints.up('sm')]: {
-      marginRight: -8,
-    },
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
+  input: {
+    // width: "100px"
+  }
+  // actions: {
+  //   display: 'flex',
+  // },
+  // expand: {
+  //   transform: 'rotate(0deg)',
+  //   transition: theme.transitions.create('transform', {
+  //     duration: theme.transitions.duration.shortest,
+  //   }),
+  //   marginLeft: 'auto',
+  //   [theme.breakpoints.up('sm')]: {
+  //     marginRight: -8,
+  //   },
+  // },
+  // expandOpen: {
+  //   transform: 'rotate(180deg)',
+  // },
 });
 
 class PlaybookCard extends React.Component {
-  state = { expanded: false };
+  state = { 
+    expanded: false,
+    itemTasks: this.props.itemTasks,
+  };
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
   };
 
-  render() {
-    // console.log(this.props);
-    
-    
+  handleChange = name => event => {        
+    for(const[index, itemTask] of this.state.itemTasks.entries()) {
+      if(itemTask.itemTaskName == event.target.value) {
+
+        const itemTasks = this.state.itemTasks;
+        if(event.target.checked) {
+          itemTasks[index].itemTaskDateCompleted = Date.now();
+        } else {
+          itemTasks[index].itemTaskDateCompleted = null;
+        }
+        // Update state
+        this.setState({
+          itemTasks,
+        });
+        break;
+      }
+    }
+  };
+
+  assignChipColor = (chipLabel) => {
+    switch (chipLabel) {
+      case 'Career':
+        return 'primary';
+      case 'School':
+        return 'secondary';
+      case 'Family':
+        return 'default';
+      default:
+        return;
+    }
+  }
+
+  render() {        
     const { classes } = this.props;
 
     return (
         <Card className={classes.card}>
           <CardHeader
-            avatar={
-              <Avatar aria-label="Recipe" className={classes.avatar}>
-                {this.props.cardTitle[0]}
-              </Avatar>
-            }
+            // avatar={
+            //   <Avatar aria-label="card-recipe" className={classes.avatar}>
+            //     {this.props.itemTitle[0]}
+            //   </Avatar>
+            // }
             action={
               <IconButton>
                 <MoreVertIcon />
               </IconButton>
             }
-            title={this.props.cardTitle}
-            subheader={<span>Due: <strong>{moment(this.props.cardDueDate).format("M/DD/YYYY")}</strong></span>}
+            title={
+            <Typography variant="title" gutterBottom>
+              {this.props.itemTitle}
+            </Typography>
+            }
+            // subheader={<Typography variant="button">Due: <strong>{moment(this.props.itemDueDate).format("M/D/YYYY")}</strong></Typography>}
+            subheader={
+              <FormControl className={classes.formControl} disabled>
+                <Typography variant="button" noWrap><strong>Due: &nbsp;</strong>
+                  <Input className={classes.input} 
+                    value={moment(this.props.itemDueDate).format("M/D/YYYY")} 
+                    inputProps={{ 
+                      style: {
+                        textAlign: "center"
+                      }
+                    }}
+                  />
+                </Typography>
+              </FormControl>
+            }
           />
-          <CardMedia
-            className={classes.media}
-            image={this.props.cardImageUrl}
-            title={this.props.title}
-          />
-          <CardContent>
+          {/* <CardContent className={classes.cardContent}>
+            <FormControl className={classes.formControl} disabled>
+              <Typography variant="button" noWrap>Due: &nbsp;
+                <Input value={moment(this.props.itemDueDate).format("M/D/YYYY")} />
+              </Typography>
+            </FormControl>
+          </CardContent> */}
+
+          {/* ItemTasks */}
+          <CardContent className={classes.cardContent}>
+            {this.props.itemTags.sort().map((tag, index) =>
+              <Chip key={index}
+                color={this.assignChipColor(tag)} //built-in colors
+                // style={{backgroundColor: this.assignChipColor(tag)}}
+                label={tag}
+                className={classes.chip}
+              />
+            )}
+          </CardContent>
+
+          <CardContent className={classes.cardContent}>
+            <Typography variant="body2" component="p">
+              Notes:
+            </Typography>
             <Typography component="p">
-              <span>{this.props.cardDescription}</span>
+              <em>{this.props.itemDescription}</em>
             </Typography>
           </CardContent>
-          <CardActions className={classes.actions} disableActionSpacing>
+
+          <CardContent className={classes.cardContent}>
+            <FormControl component="fieldset" className={classes.formControl}>
+              {/* <Typography variant="body2"> */}
+                <FormLabel component="legend">
+                  <strong>Tasks:</strong>
+                </FormLabel>
+              {/* </Typography> */}
+
+              <FormGroup>
+                {this.props.itemTasks.map(itemTask => 
+                  <FormControlLabel key={itemTask._id}
+                    control={
+                      <Checkbox 
+                        checked={itemTask.itemTaskDateCompleted !== null} 
+                        onChange={this.handleChange(`${itemTask.itemTaskName}`)} 
+                        value={itemTask.itemTaskName} 
+                      />
+                    }
+                    label={
+                      (itemTask.itemTaskDateCompleted !== null) ?
+                        (<span style={{color: grey[500]}}>
+                            {itemTask.itemTaskName}
+                          <br/>
+                          <Typography variant="caption">
+                            Completed: {moment(itemTask.itemTaskDateCompleted).format("M/D/YYYY")}
+                          </Typography>
+                        </span>):
+                        (<span>
+                            {itemTask.itemTaskName}
+                          <br/>
+                          <Typography variant="caption">
+                            Due: {moment(itemTask.itemTaskDueDate).format("M/D/YYYY")}
+                          </Typography>
+                        </span>)
+                    }
+                  />
+                )}
+              </FormGroup>
+            </FormControl>
+          </CardContent>
+
+          {/* <CardActions className={classes.actions} disableActionSpacing>
             <IconButton aria-label="Add to favorites">
               <FavoriteIcon />
             </IconButton>
@@ -137,7 +268,7 @@ class PlaybookCard extends React.Component {
                 Set aside off of the heat to let rest for 10 minutes, and then serve.
               </Typography>
             </CardContent>
-          </Collapse>
+          </Collapse> */}
         </Card>
     );
   }
@@ -145,13 +276,14 @@ class PlaybookCard extends React.Component {
 
 PlaybookCard.propTypes = {
   classes: PropTypes.object.isRequired,
-  cardTitle: PropTypes.string.isRequired,
-  cardImageUrl: PropTypes.string.isRequired,
-  cardLinkUrl: PropTypes.string.isRequired,
-  cardDescription: PropTypes.string.isRequired,
-  cardDueDate: PropTypes.instanceOf(Date),
-  cardDateAdded: PropTypes.instanceOf(Date),
-  cardDateLastModified: PropTypes.instanceOf(Date)
+
+  itemTitle: PropTypes.string.isRequired,
+  itemLinkUrl: PropTypes.string.isRequired,
+  itemDescription: PropTypes.string.isRequired,
+  itemDueDate: PropTypes.instanceOf(Date),
+  itemDateAdded: PropTypes.instanceOf(Date),
+  itemTags: PropTypes.array,
+  itemTasks: PropTypes.array,
 };
 
 export default withStyles(styles)(PlaybookCard);

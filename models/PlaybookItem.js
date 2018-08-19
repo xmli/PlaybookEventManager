@@ -2,35 +2,54 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-// Create schema
-PlaybookItemSchema = new Schema({
-    cardTitle: {
+var itemTaskSchema = new Schema({
+    itemTaskName: {
         type: String,
-        required: true,
-    },
-    cardImageUrl: {
-        type: String,
-        default: "https://cdn4.iconfinder.com/data/icons/computer-and-web/80/Computer_and_web_icons-01-512.png"
-    },
-    cardLinkUrl: {
-        type: String,
-        default: ""
-    },
-    cardDescription: {
-        type: String,
-        required: true,
-    },
-    cardDueDate: {
+        required: true
+    }, 
+    itemTaskDueDate: {
         type: Date,
         required: true
     },
-    cardDateAdded: {
+    itemTaskDateCompleted: {
+        type: Date,
+        default: null
+    },
+    itemTaskPriority: {
+        type: Number,
+        default: 1
+    }
+})
+
+// Create schema
+PlaybookItemSchema = new Schema({
+    itemTitle: {
+        type: String,
+        required: true,
+    },
+    itemLinkUrl: {
+        type: String,
+        default: ""
+    },
+    itemDescription: {
+        type: String,
+        required: true,
+    },
+    itemDueDate: {
+        type: Date,
+        required: true
+    },
+    itemDateAdded: {
         type: Date,
         default: Date.now
     },
-    cardDateLastModified: {
-        type: Date,
-        default: Date.now
+    itemTags: {
+        type: Array,
+        default: []
+    },
+    itemTasks: {
+        type: [itemTaskSchema],
+        default: []
     }
 })
 

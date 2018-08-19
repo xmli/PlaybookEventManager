@@ -1,38 +1,37 @@
 import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import classNames from 'classnames';
 
 // material-ui
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+
 // custom
 import PlaybookCard from "../PlaybookCard/PlaybookCard";
-// styles
-import "./PlaybookDashboard.css"
+import SearchBar from "../SearchBar/SearchBar";
+
 
 const styles = theme => ({
     root: {
         flexGrow: 1,
+        ...theme.mixins.gutters(),
+        paddingTop: theme.spacing.unit * 2,
+        paddingBottom: theme.spacing.unit * 2,
     },
-    grid: {
-        height: 400
-    },
-    card: {
-        height: "100%"
-    }
 });
 
 class PlaybookDashboard extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
             searchText: '',
-            itemTags: [],
             apiUrl: "/api/items",
             playbookItems: [],
-            didGetPlaybookItems: false
+            didGetPlaybookItems: false,
         }
     }
 
@@ -40,7 +39,7 @@ class PlaybookDashboard extends Component {
         axios.get(`${this.state.apiUrl}`)
         .then(res => this.setState({ 
             playbookItems: res.data,
-            didGetPlaybookItems: true
+            didGetPlaybookItems: true,
         }))
         .catch(err => console.log(err));
     }
@@ -51,63 +50,67 @@ class PlaybookDashboard extends Component {
         })
     }
 
+    generateItemTagObjectArray = (arr) => {
+        let objArr = []
+        arr.map(label => {
+            switch (label) {
+                case 'Career':
+                    objArr.push({
+                        label: {label}, color: 'primary'
+                    })
+                    break;
+                case 'School':
+                    objArr.push({
+                        label: {label}, color: 'secondary'
+                    })
+                    break;
+                case 'Family':
+                    objArr.push({
+                        label: {label}, color: 'default'
+                    })
+                    break;
+                default:
+                    break;
+            }
+        })
+        return objArr;
+    }
+
+    handleChange = name => value => {
+        this.setState({
+          [name]: value,
+        });
+    };
+
     render() {
-        const { classes } = this.props;
+        
+        const { classes, theme } = this.props;
 
         if(this.state.didGetPlaybookItems) {
             return (
-                // <div>
-                //     <div className="row flex-container">
-                //         {this.state.playbookItems.map(item =>
-                //             <div key={item._id} className="flex-item">
-                //                 <PlaybookCard key={item._id} className="flex-item"
-                //                     cardTitle={item.cardTitle}
-                //                     cardImageUrl={item.cardImageUrl}
-                //                     cardLinkUrl={item.cardLinkUrl}
-                //                     cardDescription={item.cardDescription}
-                //                     cardDueDate={new Date(item.cardDueDate)}
-                //                     cardDateAdded={new Date(item.cardDateAdded)}
-                //                     cardDateLastModified={new Date(item.cardDateLastModified)}
-                //                 />
-                //             </div>
-                //         )}
-                //     </div>
-                // </div>
-
                 <div className={classes.root}>
-                    <div style={{ padding: "20px" }}>
-                        <TextField 
-                            name="searchText"
-                            value={this.state.searchText}
-                            onChange={this._onTextChange}
-                            placeholder="Search for a particular playbook item"
-                            fullWidth
-                            margin="normal"
-                        />
-                    </div>
+                    <SearchBar suggestions={this.state.playbookItems} />
+
                     <Grid 
                         container 
                         spacing={24} 
                         className={classes.grid}
                         alignItems="stretch"
                         direction="row"
-                        // justify="flex-start"
                     >
-                    {/* <div className="row flex-container"> */}
-                        {this.state.playbookItems.map(pitem =>
-                            <Grid item xs={12} sm={6} md={4} lg={3} key={pitem._id}>
-                                <PlaybookCard className={classes.card}
-                                    cardTitle={pitem.cardTitle}
-                                    cardImageUrl={pitem.cardImageUrl}
-                                    cardLinkUrl={pitem.cardLinkUrl}
-                                    cardDescription={pitem.cardDescription}
-                                    cardDueDate={new Date(pitem.cardDueDate)}
-                                    cardDateAdded={new Date(pitem.cardDateAdded)}
-                                    cardDateLastModified={new Date(pitem.cardDateLastModified)}
+                        {this.state.playbookItems.map(pb_item =>
+                            <Grid item xs={12} sm={6} md={4} lg={3} key={pb_item._id}>
+                                <PlaybookCard
+                                    itemTitle={pb_item.itemTitle}
+                                    itemLinkUrl={pb_item.itemLinkUrl}
+                                    itemDescription={pb_item.itemDescription}
+                                    itemDueDate={new Date(pb_item.itemDueDate)}
+                                    itemDateAdded={new Date(pb_item.itemDateAdded)}
+                                    itemTags={pb_item.itemTags}
+                                    itemTasks={pb_item.itemTasks}
                                 />
                             </Grid>
                         )}
-                    {/* </div> */}
                     </Grid>
                 </div>
             );

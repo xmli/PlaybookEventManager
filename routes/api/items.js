@@ -18,13 +18,13 @@ router.get('/', (req, res) => {
 // @access: Public
 router.post('/', (req, res) => {
     const newItem = new PlaybookItem({
-        cardTitle: req.body.cardTitle,
-        cardImageUrl: req.body.cardImageUrl,
-        cardLinkUrl: req.body.cardLinkUrl,
-        cardDescription: req.body.cardDescription,
-        cardDueDate: req.body.cardDueDate,
-        cardDateAdded: req.body.cardDateAdded,
-        cardDateLastModified: req.body.cardDateLastModified
+        itemTitle: req.body.itemTitle,
+        itemLinkUrl: req.body.itemLinkUrl,
+        itemDescription: req.body.itemDescription,
+        itemDueDate: req.body.itemDueDate,
+        itemDateAdded: req.body.itemDateAdded,
+        itemTags: req.body.itemTags,
+        itemTasks: req.body.itemTasks,
     });
 
     newItem.save()
