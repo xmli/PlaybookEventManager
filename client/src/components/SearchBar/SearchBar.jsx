@@ -32,8 +32,8 @@ const styles = theme => ({
     },
     chipFocused: {
         backgroundColor: emphasize(
-        theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
-        0.08,
+            theme.palette.type === 'light' ? theme.palette.grey[300] : theme.palette.grey[700],
+            0.08,
         ),
     },
     noOptionsMessage: {
@@ -61,173 +61,175 @@ const styles = theme => ({
             boxShadow: "1px 5px 20px rgba(0,0,0,0.25)"
         },
         marginBottom: "25px"
-    }
+    },
+    //Button
+    button: {
+        margin: theme.spacing.unit,
+    },
 });
 
 function NoOptionsMessage(props) {
-  return (
-    <Typography
-      color="textSecondary"
-      className={props.selectProps.classes.noOptionsMessage}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
+    return (
+        <Typography
+        color="textSecondary"
+        className={props.selectProps.classes.noOptionsMessage}
+        {...props.innerProps}
+        >
+        {props.children}
+        </Typography>
+    );
 }
 
 function inputComponent({ inputRef, ...props }) {
-  return <div ref={inputRef} {...props} />;
+    return <div ref={inputRef} {...props} />;
 }
 
 function Control(props) {
-  return (
-    <TextField
-      fullWidth
-      InputProps={{
-        inputComponent,
-        inputProps: {
-          className: props.selectProps.classes.input,
-          inputRef: props.innerRef,
-          children: props.children,
-          ...props.innerProps,
-        },
-      }}
-      {...props.selectProps.textFieldProps}
-    />
-  );
+    return (
+        <TextField
+            fullWidth
+            InputProps={{
+                inputComponent,
+                inputProps: {
+                className: props.selectProps.classes.input,
+                inputRef: props.innerRef,
+                children: props.children,
+                ...props.innerProps,
+                },
+            }}
+            {...props.selectProps.textFieldProps}
+        />
+    );
 }
 
 function Option(props) {
-  return (
-    <MenuItem
-      buttonRef={props.innerRef}
-      selected={props.isFocused}
-      component="div"
-      style={{
-        fontWeight: props.isSelected ? 500 : 400,
-      }}
-      {...props.innerProps}
-    >
-      {props.children}
-    </MenuItem>
-  );
+    return (
+        <MenuItem
+            buttonRef={props.innerRef}
+            selected={props.isFocused}
+            component="div"
+            style={{
+                fontWeight: props.isSelected ? 500 : 400,
+            }}
+            {...props.innerProps}
+        >
+            {props.children}
+        </MenuItem>
+    );
 }
 
 function Placeholder(props) {
-  return (
-    <Typography
-      color="textSecondary"
-      className={props.selectProps.classes.placeholder}
-      {...props.innerProps}
-    >
-      {props.children}
-    </Typography>
-  );
+    return (
+        <Typography
+            color="textSecondary"
+            className={props.selectProps.classes.placeholder}
+            {...props.innerProps}
+        >
+            {props.children}
+        </Typography>
+    );
 }
 
 function SingleValue(props) {
-  return (
-    <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
-      {props.children}
-    </Typography>
-  );
+    return (
+        <Typography className={props.selectProps.classes.singleValue} {...props.innerProps}>
+            {props.children}
+        </Typography>
+    );
 }
 
 function ValueContainer(props) {
-  return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
+    return <div className={props.selectProps.classes.valueContainer}>{props.children}</div>;
 }
 
 function MultiValue(props) {
-  return (
-    <Chip
-      tabIndex={-1}
-      label={props.children}
-      className={classNames(props.selectProps.classes.chip, {
-        [props.selectProps.classes.chipFocused]: props.isFocused,
-      })}
-      onDelete={event => {
-        props.removeProps.onClick();
-        props.removeProps.onMouseDown(event);
-      }}
-    />
-  );
+    return (
+        <Chip
+            tabIndex={-1}
+            label={props.children}
+            className={classNames(props.selectProps.classes.chip, {
+                [props.selectProps.classes.chipFocused]: props.isFocused,
+            })}
+            onDelete={event => {
+                props.removeProps.onClick();
+                props.removeProps.onMouseDown(event);
+            }}
+        />
+    );
 }
 
 function Menu(props) {
-  return (
-    <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
-      {props.children}
-    </Paper>
-  );
+    return (
+        <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
+            {props.children}
+        </Paper>
+    );
 }
 
 const components = {
-  Option,
-  Control,
-  NoOptionsMessage,
-  Placeholder,
-  SingleValue,
-  MultiValue,
-  ValueContainer,
-  Menu,
+    Option,
+    Control,
+    NoOptionsMessage,
+    Placeholder,
+    SingleValue,
+    MultiValue,
+    ValueContainer,
+    Menu,
 };
 
 class SearchBar extends React.Component {
-  state = {
-    single: null,
-    multi: null,
-  };
-
-  handleChange = name => value => {
-    this.setState({
-      [name]: value,
-    });
-  };
-
-  render() {
-      console.log(this.props.suggestions);
-      
-    const { classes, theme } = this.props;
-
-    const selectStyles = {
-      input: base => ({
-        ...base,
-        color: theme.palette.text.primary,
-      }),
+    state = {
+        single: null,
+        multi: null,
     };
 
-    const suggestions = this.props.suggestions
-    .map(item => ({
-        value: item.itemTitle,
-        label: item.itemTitle,
-    }));
+    handleChange = name => value => {
+        this.setState({
+            [name]: value,
+        });
+    };
 
-    return (
-      <div className={classes.root}>
-        <Paper className={classes.cardContent}>
-            <NoSsr>
-                <Select
-                    classes={classes}
-                    styles={selectStyles}
-                    textFieldProps={{
-                    label: 'Playbook Item',
-                    InputLabelProps: {
-                        shrink: true,
-                    },
-                    }}
-                    options={suggestions}
-                    components={components}
-                    value={this.state.multi}
-                    onChange={this.handleChange('multi')}
-                    placeholder="Select multiple items"
-                    isMulti
-                />
-            </NoSsr>
-        </Paper>
-      </div>
-    );
-  }
+    render() {      
+        const { classes, theme } = this.props;
+
+        const selectStyles = {
+        input: base => ({
+            ...base,
+            color: theme.palette.text.primary,
+        }),
+        };
+
+        const suggestions = this.props.suggestions
+        .map(item => ({
+            value: item.itemTitle,
+            label: item.itemTitle,
+        }));
+
+        return (
+        <div className={classes.root}>
+            <Paper className={classes.cardContent}>
+                <NoSsr>
+                    <Select
+                        classes={classes}
+                        styles={selectStyles}
+                        textFieldProps={{
+                        label: 'Playbook Item',
+                        InputLabelProps: {
+                            shrink: true,
+                        },
+                        }}
+                        options={suggestions}
+                        components={components}
+                        value={this.state.multi}
+                        onChange={this.handleChange('multi')}
+                        placeholder="Select multiple items"
+                        isMulti
+                    />
+                </NoSsr>
+            </Paper>
+        </div>
+        );
+    }
 }
 
 SearchBar.propTypes = {

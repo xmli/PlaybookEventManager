@@ -31,7 +31,21 @@ router.post('/', (req, res) => {
     .then(item => res.json(item));
 });
 
-// @route: DELETE api/items
+// @route: PUT api/items/:id
+// @desc: Create an item
+// @access: Public
+router.put('/:id', (req, res) => {        
+    var myquery = { _id:  req.params.id};
+    //When using the $set operator, only the specified fields are updated
+    var updates = { $set: 
+        { itemTasks: req.body.itemTasks } 
+    };
+    PlaybookItem.updateOne(myquery, updates)
+    .then(() => res.json({ success: true }))
+    .catch(err => res.status(404).json({ success: false }));
+});
+
+// @route: DELETE api/items/:id
 // @desc: Delete an item
 // @access: Public
 router.delete('/:id', (req, res) => {

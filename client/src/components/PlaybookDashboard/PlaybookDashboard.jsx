@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import classNames from 'classnames';
 
 // material-ui
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 
 // custom
 import PlaybookCard from "../PlaybookCard/PlaybookCard";
@@ -72,7 +67,7 @@ class PlaybookDashboard extends Component {
                 default:
                     break;
             }
-        })
+        });
         return objArr;
     }
 
@@ -101,6 +96,7 @@ class PlaybookDashboard extends Component {
                         {this.state.playbookItems.map(pb_item =>
                             <Grid item xs={12} sm={6} md={4} lg={3} key={pb_item._id}>
                                 <PlaybookCard
+                                    itemId={pb_item._id}
                                     itemTitle={pb_item.itemTitle}
                                     itemLinkUrl={pb_item.itemLinkUrl}
                                     itemDescription={pb_item.itemDescription}

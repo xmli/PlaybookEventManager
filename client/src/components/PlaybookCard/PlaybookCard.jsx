@@ -51,6 +51,9 @@ const styles = theme => ({
   },
   chip: {
     marginRight: theme.spacing.unit / 2,
+    '&:hover': {
+      boxShadow: "2px 2px 8px rgba(0,0,0,0.1), 1px 1px 6px rgba(0,0,0,0.2)"
+    }
   },
   input: {
     // width: "100px"
@@ -77,6 +80,7 @@ class PlaybookCard extends React.Component {
   state = { 
     expanded: false,
     itemTasks: this.props.itemTasks,
+    apiUrl: "/api/items",
   };
 
   handleExpandClick = () => {
@@ -89,7 +93,7 @@ class PlaybookCard extends React.Component {
 
         const itemTasks = this.state.itemTasks;
         if(event.target.checked) {
-          itemTasks[index].itemTaskDateCompleted = Date.now();
+          itemTasks[index].itemTaskDateCompleted = new Date();
         } else {
           itemTasks[index].itemTaskDateCompleted = null;
         }
@@ -97,10 +101,26 @@ class PlaybookCard extends React.Component {
         this.setState({
           itemTasks,
         });
+        this.updatePlaybookItem();
         break;
       }
     }
   };
+
+  updatePlaybookItem = () => {    
+    var putData = {
+      "itemId": this.props.itemId,
+      "itemTasks": this.state.itemTasks
+    }
+    fetch(`${this.state.apiUrl}/${this.props.itemId}`, {
+      method: 'PUT', // or 'PUT'
+      body: JSON.stringify(putData), // data can be `string` or {object}!
+      headers:{
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error:', error));
+  }
 
   assignChipColor = (chipLabel) => {
     switch (chipLabel) {
