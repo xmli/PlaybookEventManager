@@ -12,6 +12,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import AddIcon from '@material-ui/icons/Add';
+
+//import custom
+import NewItemCard from '../NewItemCard/NewItemCard';
 
 const styles = theme => ({
   root: {
@@ -33,6 +37,7 @@ class AppNavBar extends React.Component {
   state = {
     auth: true,
     anchorEl: null,
+    createNewCard: false,
   };
 
   handleChange = (event, checked) => {
@@ -64,12 +69,21 @@ class AppNavBar extends React.Component {
         </FormGroup> */}
         <AppBar position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <IconButton 
+              TouchRippleProps={{center: false}} 
+              className={classes.menuButton} 
+              color="inherit" 
+              aria-label="Menu"
+            >
               <MenuIcon />
             </IconButton>
+  
             <Typography variant="title" color="inherit" className={classes.flex}>
               Playbook
             </Typography>
+
+            <NewItemCard createNewCard={this.state.createNewCard}/>
+
             {auth && (
               <div>
                 <IconButton

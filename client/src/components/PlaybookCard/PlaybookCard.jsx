@@ -5,6 +5,7 @@ import * as moment from 'moment';
 import Avatar from '@material-ui/core/Avatar';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
+import ButtonBase from '@material-ui/core/ButtonBase/ButtonBase';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -27,6 +28,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import InfoIcon from '@material-ui/icons/Info';
 
 import pink from '@material-ui/core/colors/pink';
 import blue from '@material-ui/core/colors/blue';
@@ -55,9 +57,16 @@ const styles = theme => ({
       boxShadow: "2px 2px 8px rgba(0,0,0,0.1), 1px 1px 6px rgba(0,0,0,0.2)"
     }
   },
-  input: {
-    // width: "100px"
-  }
+  formControl: {
+    width: "100%"
+  },
+  iconButton: {
+    height: 25, 
+    width: 25, 
+    marginLeft: 10, 
+    position:"absolute", 
+    right: 0
+  },
   // actions: {
   //   display: 'flex',
   // },
@@ -160,14 +169,16 @@ class PlaybookCard extends React.Component {
             subheader={
               <FormControl className={classes.formControl} disabled>
                 <Typography variant="button" noWrap><strong>Due: &nbsp;</strong>
-                  <Input className={classes.input} 
-                    value={moment(this.props.itemDueDate).format("M/D/YYYY")} 
-                    inputProps={{ 
-                      style: {
-                        textAlign: "center"
-                      }
-                    }}
-                  />
+                  {/* <ButtonBase> */}
+                    <Input className={classes.input} 
+                      value={moment(this.props.itemDueDate).format("M/D/YYYY")} 
+                      inputProps={{ 
+                        style: {
+                          textAlign: "center"
+                        }
+                      }}
+                    />
+                  {/* </ButtonBase> */}
                 </Typography>
               </FormControl>
             }
@@ -188,7 +199,7 @@ class PlaybookCard extends React.Component {
                 // style={{backgroundColor: this.assignChipColor(tag)}}
                 label={tag}
                 className={classes.chip}
-              />
+              />        
             )}
           </CardContent>
 
@@ -223,14 +234,15 @@ class PlaybookCard extends React.Component {
                       (itemTask.itemTaskDateCompleted !== null) ?
                         (<span style={{color: grey[500]}}>
                             {itemTask.itemTaskName}
-                          <br/>
                           <Typography variant="caption">
                             Completed: {moment(itemTask.itemTaskDateCompleted).format("M/D/YYYY")}
                           </Typography>
                         </span>):
                         (<span>
                             {itemTask.itemTaskName}
-                          <br/>
+                            <IconButton className={classes.iconButton} >
+                              <InfoIcon style={{fontSize: "15px"}} />
+                            </IconButton>
                           <Typography variant="caption">
                             Due: {moment(itemTask.itemTaskDueDate).format("M/D/YYYY")}
                           </Typography>
