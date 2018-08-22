@@ -140,17 +140,12 @@ class NewItemCard extends React.Component {
             itemTasks: this.state.itemTasks,
         }
 
-        this.props.updateParent(newPlaybookItem);
-
         axios.post(`${this.state.apiUrl}`, newPlaybookItem)
         .then(res => {
-            console.log(res);
             this.setState({
                 open: false
             });
-            this.props.updateParent(res.data);
-            console.log("props:", this.props);
-            
+            this.props.addNewPlaybookItem(res.data);            
         })
         .catch(err => console.error(err));
         

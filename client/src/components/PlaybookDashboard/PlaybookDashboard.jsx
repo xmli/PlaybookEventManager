@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 // custom
 import PlaybookCard from "../PlaybookCard/PlaybookCard";
-import SearchBar from "../SearchBar/SearchBar";
+// import SearchBar from "../SearchBar/SearchBar";
 
 
 const styles = theme => ({
@@ -26,8 +26,6 @@ class PlaybookDashboard extends Component {
             searchText: '',
             apiUrl: "/api/items",
             playbookItems: [],
-            didGetPlaybookItems: false,
-            didGetNewItem: this.props.createNewItem !== null,
         }
     }
 
@@ -35,11 +33,34 @@ class PlaybookDashboard extends Component {
         axios.get(`${this.state.apiUrl}`)
         .then(res => this.setState({ 
             playbookItems: res.data,
-            didGetPlaybookItems: true,
         }))
         .catch(err => console.log(err));
     }
 
+    //Add new Playbook item
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            playbookItems: [nextProps.newPlaybookItem, ...this.state.playbookItems]
+        })
+    }
+
+    //Delete Playbook item
+    deletePlaybookItem = (itemId) => {
+        axios.delete(`${this.state.apiUrl}/${itemId}`)
+        .then(res => {
+            let playbookItems = this.state.playbookItems;
+            for(let item of playbookItems) {
+                if(item._id === itemId) {
+                    var index = playbookItems.indexOf(item);
+                    playbookItems.splice(index, 1);
+                    this.setState({ playbookItems });
+                    break;
+                }                
+            }
+        })
+        .catch(err => console.error(err));        
+    }
+    
     _onTextChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
@@ -78,24 +99,10 @@ class PlaybookDashboard extends Component {
         });
     };
 
-    render() { 
-        console.log("this.state:", this.state);
-               
+    render() {                
         const { classes } = this.props;
 
-        console.log("this.props.createNewItem:", this.props.createNewItem);
-        if(this.state.didGetNewItem) {
-            let playbookItems = this.state.playbookItems;
-            console.log("playbookItems", playbookItems);
-            
-            playbookItems.push(this.props.createNewItem)
-            this.setState({ 
-                playbookItems,
-                didGetNewItem: false
-            }) 
-        }
-
-        if(this.state.didGetPlaybookItems) {
+        if(this.state.playbookItems.length !== 0) {
 
             return (
                 <div className={classes.root}>
@@ -119,6 +126,8 @@ class PlaybookDashboard extends Component {
                                     itemDateAdded={new Date(pb_item.itemDateAdded)}
                                     itemTags={pb_item.itemTags}
                                     itemTasks={pb_item.itemTasks}
+
+                                    deletePlaybookItem={this.deletePlaybookItem}
                                 />
                             </Grid>
                         )}

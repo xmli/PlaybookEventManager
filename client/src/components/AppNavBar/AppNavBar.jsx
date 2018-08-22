@@ -7,12 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import AddIcon from '@material-ui/icons/Add';
 
 //import custom
 import NewItemCard from '../NewItemCard/NewItemCard';
@@ -41,8 +37,6 @@ class AppNavBar extends React.Component {
       auth: true,
       anchorEl: null,
     };
-
-    this.updateParent = this.updateParent.bind(this);
   }
 
   
@@ -59,10 +53,8 @@ class AppNavBar extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  updateParent(newPlaybookItem) {   
-    console.log("createSuccessful: AppNavBar");
-     
-    this.props.updateParent(newPlaybookItem);
+  addNewPlaybookItem = (newPlaybookItem) => {        
+    this.props.addNewPlaybookItem(newPlaybookItem);
   }
 
   render() {
@@ -95,7 +87,7 @@ class AppNavBar extends React.Component {
               Playbook
             </Typography>
 
-            <NewItemCard updateParent={this.updateParent}/>
+            <NewItemCard addNewPlaybookItem={this.addNewPlaybookItem}/>
 
             {auth && (
               <div>

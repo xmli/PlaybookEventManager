@@ -1,17 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as moment from 'moment';
-// material-ui
-import Avatar from '@material-ui/core/Avatar';
-import Badge from '@material-ui/core/Badge';
-import Button from '@material-ui/core/Button';
-import ButtonBase from '@material-ui/core/ButtonBase/ButtonBase';
+import axios from 'axios';
 
+// material-ui
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
 
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -23,18 +18,17 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import InfoIcon from '@material-ui/icons/Info';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DateIcon from '@material-ui/icons/EventAvailable';
 import NotesIcon from '@material-ui/icons/Notes';
 
-import pink from '@material-ui/core/colors/pink';
-import blue from '@material-ui/core/colors/blue';
+// import pink from '@material-ui/core/colors/pink';
+// import blue from '@material-ui/core/colors/blue';
 import grey from '@material-ui/core/colors/grey';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -60,13 +54,6 @@ const styles = theme => ({
   formControl: {
     width: "100%"
   },
-  iconButton: {
-    height: 36, 
-    width: 36, 
-    marginLeft: 12, 
-    position:"absolute", 
-    right: 0
-  },
   button: {
     float: "left",
     margin: theme.spacing.unit / 2,
@@ -76,18 +63,31 @@ const styles = theme => ({
 
 class PlaybookCard extends React.Component {
   state = { 
-    expanded: false,
     itemTasks: this.props.itemTasks,
     apiUrl: "/api/items",
+
+    //delete
+    anchorEl: null,
   };
 
-  handleExpandClick = () => {
-    this.setState(state => ({ expanded: !state.expanded }));
+  //delete button
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
   };
 
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  _onDeletePlaybookCard = () => {
+    this.props.deletePlaybookItem(this.props.itemId);
+    this.setState({ anchorEl: null });
+  }
+
+  //handle an update to an item
   handleChange = name => event => {        
     for(const[index, itemTask] of this.state.itemTasks.entries()) {
-      if(itemTask.itemTaskName == event.target.value) {
+      if(itemTask.itemTaskName === event.target.value) {
 
         const itemTasks = this.state.itemTasks;
         if(event.target.checked) {
@@ -104,6 +104,7 @@ class PlaybookCard extends React.Component {
       }
     }
   };
+  
 
   updatePlaybookItem = () => {    
     var putData = {
@@ -140,12 +141,24 @@ class PlaybookCard extends React.Component {
         <Card className={classes.card}>
           <CardHeader
             action={
-              <IconButton 
-                // color="primary"
-              >
-                {/* <CheckCircleIcon /> */}
-                <MoreVertIcon />
-              </IconButton>
+              <div>
+                <IconButton 
+                  aria-owns={this.state.anchorEl ? 'simple-menu' : null}
+                  aria-haspopup="true"
+                  onClick={this.handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="simple-menu"
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={this.handleClose}
+                >
+                  <MenuItem onClick={this.handleClose}>Edit</MenuItem>
+                  <MenuItem onClick={this._onDeletePlaybookCard}>Delete</MenuItem>
+                </Menu>
+              </div>
             }
             title={
             <Typography variant="title" gutterBottom>
@@ -217,9 +230,6 @@ class PlaybookCard extends React.Component {
                         </span>):
                         (<span>
                             {itemTask.itemTaskName}
-                            <IconButton className={classes.iconButton} >
-                              <InfoIcon style={{fontSize: "15px"}} />
-                            </IconButton>
                           <Typography variant="caption">
                             Due: {moment(itemTask.itemTaskDueDate).format("M/D/YYYY")}
                           </Typography>

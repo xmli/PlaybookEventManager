@@ -25,17 +25,14 @@ class App extends Component {
     super(props);
 
     this.state = {
-      createNewItem: null
+      newPlaybookItem: null
     }
-
-    this.updateParent = this.updateParent.bind(this);
   }
 
-  updateParent(newPlaybookItem) {  
-    console.log("AppJs:", newPlaybookItem);
+  addNewPlaybookItem = (newPlaybookItem) => {  
     if(newPlaybookItem != null) {
       this.setState({
-        createNewItem: newPlaybookItem
+        newPlaybookItem: newPlaybookItem
       });
     }
   }
@@ -44,8 +41,9 @@ class App extends Component {
     return (
       <div className="App">
         <MuiThemeProvider theme={theme}>
-          <AppNavBar updateParent={this.updateParent}/>
-          <PlaybookDashboard createNewItem={this.state.createNewItem}/>
+          <AppNavBar addNewPlaybookItem={this.addNewPlaybookItem}/>
+          <PlaybookDashboard 
+            newPlaybookItem={this.state.newPlaybookItem}/>
         </MuiThemeProvider>
       </div>
     );
