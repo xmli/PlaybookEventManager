@@ -168,8 +168,8 @@ class PlaybookCard extends React.Component {
             subheader={
               <FormControl className={classes.formControl} disabled>
                 <Typography variant="button" noWrap>
-                 <DateIcon className={classes.button}/>
-                <strong>Due: &nbsp;</strong>
+                  <DateIcon className={classes.button}/>
+                  <strong>Due: &nbsp;</strong>
                     <Input className={classes.input} 
                       value={moment(this.props.itemDueDate).format("M/D/YYYY")} 
                       inputProps={{ 

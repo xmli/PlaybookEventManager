@@ -41,9 +41,12 @@ class App extends Component {
     return (
       <div className="App">
         <MuiThemeProvider theme={theme}>
-          <AppNavBar addNewPlaybookItem={this.addNewPlaybookItem}/>
+          <AppNavBar 
+            addNewPlaybookItem={this.addNewPlaybookItem}
+          />
           <PlaybookDashboard 
-            newPlaybookItem={this.state.newPlaybookItem}/>
+            newPlaybookItem={this.state.newPlaybookItem}
+          />
         </MuiThemeProvider>
       </div>
     );

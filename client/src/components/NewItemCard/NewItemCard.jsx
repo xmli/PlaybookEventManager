@@ -252,7 +252,7 @@ render() {
             </Button>
             <Dialog
                 open={this.state.open}
-                onClose={this.handleClose}
+                onClose={this._handleClose}
                 aria-labelledby="form-dialog-title"
             >
                 <DialogTitle id="form-dialog-title">
@@ -280,9 +280,9 @@ render() {
                         }}
                         InputProps={{
                             startAdornment: (
-                              <InputAdornment position="start">
+                            <InputAdornment position="start">
                                 <DateIcon />
-                              </InputAdornment>
+                            </InputAdornment>
                             ),
                         }}
                         onChange={this._onChangeItemDueDate}
@@ -314,9 +314,9 @@ render() {
                         required
                         InputProps={{
                             startAdornment: (
-                              <InputAdornment position="start">
+                            <InputAdornment position="start">
                                 <NotesIcon />
-                              </InputAdornment>
+                            </InputAdornment>
                             ),
                         }}
                     />
@@ -329,9 +329,9 @@ render() {
                         fullWidth
                         InputProps={{
                             startAdornment: (
-                              <InputAdornment position="start">
+                            <InputAdornment position="start">
                                 <LinkIcon />
-                              </InputAdornment>
+                            </InputAdornment>
                             ),
                         }}
                     />
