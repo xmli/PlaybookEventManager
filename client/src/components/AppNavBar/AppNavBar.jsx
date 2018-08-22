@@ -39,8 +39,6 @@ class AppNavBar extends React.Component {
     };
   }
 
-  
-
   handleChange = (event, checked) => {
     this.setState({ auth: checked });
   };

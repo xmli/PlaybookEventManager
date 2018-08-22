@@ -27,7 +27,7 @@ import grey from '@material-ui/core/colors/grey';
 const styles = theme => ({
     button: {
       margin: theme.spacing.unit,
-      color: 'white'
+      color: "white"
     },
     leftIcon: {
       marginRight: theme.spacing.unit,
@@ -99,7 +99,7 @@ class NewItemCard extends React.Component {
     
             itemTitle: "",
             itemLinkUrl: "",
-            itemDueDate: moment(new Date()).add(1,'day').format("YYYY-MM-DD"),
+            itemDueDate: moment(new Date()).format("YYYY-MM-DD"),
             itemTags: [],
             itemDescription: "",
             itemTasks: [],
@@ -114,7 +114,7 @@ class NewItemCard extends React.Component {
 
             itemTitle: "",
             itemitemLinkUrl: "",
-            itemDueDate: moment(new Date()).add(1,'day').format("YYYY-MM-DD"),
+            itemDueDate: moment(new Date()).format("YYYY-MM-DD"),
             itemTags: [],
             itemDescription: "",
             itemTasks: [],
@@ -203,7 +203,7 @@ class NewItemCard extends React.Component {
         let itemTasks = this.state.itemTasks;
         let newItemTask = {
             itemTaskName: "",
-            itemTaskDueDate: moment(new Date()).add(1,'day').format("YYYY-MM-DD"),
+            itemTaskDueDate: moment(new Date()).format("YYYY-MM-DD"),
             itemTaskDateCompleted: "",
             itemTaskPriority: 1
         }
