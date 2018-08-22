@@ -92,18 +92,23 @@ const selectedTagColorMap = {
 }
 
 class NewItemCard extends React.Component {
-    state = {
-        open: this.props.createNewCard,
-        itemTagColorMap: unselectedTagColorMap,
-        apiUrl: "/api/items",
+    constructor(props) {
+        super(props);
 
-        itemTitle: "",
-        itemLinkUrl: "",
-        itemDueDate: moment(new Date()).add(1,'day').format("YYYY-MM-DD"),
-        itemTags: [],
-        itemDescription: "",
-        itemTasks: [],
-    };
+        this.state = {
+            open: false,
+            itemTagColorMap: unselectedTagColorMap,
+            apiUrl: "/api/items",
+    
+            itemTitle: "",
+            itemLinkUrl: "",
+            itemDueDate: moment(new Date()).add(1,'day').format("YYYY-MM-DD"),
+            itemTags: [],
+            itemDescription: "",
+            itemTasks: [],
+        };
+    }
+    
 
     resetNewItemDefaults = () => {
         this.setState({ 
@@ -124,7 +129,6 @@ class NewItemCard extends React.Component {
     };
 
     _handleClose = () => {
-        console.log("Item cancelled.");
         this.resetNewItemDefaults();
     };
 
@@ -138,15 +142,18 @@ class NewItemCard extends React.Component {
             itemDescription: this.state.itemDescription,
             itemTasks: this.state.itemTasks,
         }
-        console.log("New item created!", newPlaybookItem);
-        
-        
-        // axios.post(`${this.state.apiUrl}`)
-        //     .then(res => this.setState({ 
-        //         playbookItems: res.data,
-        //         didGetPlaybookItems: true,
-        //     }))
-        //     .catch(err => console.log(err));
+
+        axios.post(`${this.state.apiUrl}`, newPlaybookItem)
+        .then(res => {
+            console.log(res);
+            this.setState({
+                open: false
+            });
+            this.props.updateParent(res.data);
+            console.log("props:", this.props);
+            
+        })
+        .catch(err => console.error(err));
         
         this.resetNewItemDefaults();
     }
@@ -192,17 +199,13 @@ class NewItemCard extends React.Component {
         })        
     }
 
-    handleChange = name => event => {
-        // console.log("name", name);
-        // console.log("event", event.target.value);
-        
+    handleChange = name => event => { 
         this.setState({
             [name]: event.target.value,
         });
     };
 
     _onCreateNewItemTask = () => {
-        console.log("New item task created!");   
         let itemTasks = this.state.itemTasks;
         let newItemTask = {
             itemTaskName: "",
@@ -269,8 +272,6 @@ render() {
                         onChange={this._onChangeItemTitle}
                         fullWidth
                         required={true}
-                        // helperText={this.state.itemTitle === "" ? "Enter item title" : null}
-                        // error={this.state.itemTitle === "" ? true : false}
                     />
                     
                 </DialogTitle>

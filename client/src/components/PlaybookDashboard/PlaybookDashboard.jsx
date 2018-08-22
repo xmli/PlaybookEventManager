@@ -77,14 +77,14 @@ class PlaybookDashboard extends Component {
         });
     };
 
-    render() {
-        
+    render() {        
         const { classes, theme } = this.props;
 
         if(this.state.didGetPlaybookItems) {
+
             return (
                 <div className={classes.root}>
-                    <SearchBar suggestions={this.state.playbookItems} />
+                    {/* <SearchBar suggestions={this.state.playbookItems} /> */}
 
                     <Grid 
                         container 

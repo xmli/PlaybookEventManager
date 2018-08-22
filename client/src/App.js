@@ -20,12 +20,32 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      createNewItem: null
+    }
+
+    this.updateParent = this.updateParent.bind(this);
+  }
+
+  updateParent(newPlaybookItem) {  
+    console.log("AppJs:", newPlaybookItem);
+    if(newPlaybookItem != null) {
+      this.setState({
+        createNewItem: newPlaybookItem
+      });
+    }
+  }
+
   render() {
     return (
       <div className="App">
         <MuiThemeProvider theme={theme}>
-          <AppNavBar />
-          <PlaybookDashboard />
+          <AppNavBar updateParent={this.updateParent}/>
+          <PlaybookDashboard createNewItem={this.state.createNewItem}/>
         </MuiThemeProvider>
       </div>
     );

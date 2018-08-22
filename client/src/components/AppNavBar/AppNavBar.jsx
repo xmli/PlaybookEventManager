@@ -34,11 +34,18 @@ const styles = theme => ({
 });
 
 class AppNavBar extends React.Component {
-  state = {
-    auth: true,
-    anchorEl: null,
-    createNewCard: false,
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      auth: true,
+      anchorEl: null,
+    };
+
+    this.updateParent = this.updateParent.bind(this);
+  }
+
+  
 
   handleChange = (event, checked) => {
     this.setState({ auth: checked });
@@ -51,6 +58,12 @@ class AppNavBar extends React.Component {
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
+
+  updateParent(newPlaybookItem) {   
+    console.log("createSuccessful: AppNavBar");
+     
+    this.props.updateParent(newPlaybookItem);
+  }
 
   render() {
     const { classes } = this.props;
@@ -82,7 +95,7 @@ class AppNavBar extends React.Component {
               Playbook
             </Typography>
 
-            <NewItemCard createNewCard={this.state.createNewCard} />
+            <NewItemCard updateParent={this.updateParent}/>
 
             {auth && (
               <div>
