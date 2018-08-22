@@ -82,7 +82,7 @@ class AppNavBar extends React.Component {
               Playbook
             </Typography>
 
-            <NewItemCard createNewCard={this.state.createNewCard}/>
+            <NewItemCard createNewCard={this.state.createNewCard} />
 
             {auth && (
               <div>

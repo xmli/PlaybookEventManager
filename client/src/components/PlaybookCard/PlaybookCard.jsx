@@ -29,6 +29,9 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import InfoIcon from '@material-ui/icons/Info';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import DateIcon from '@material-ui/icons/EventAvailable';
+import NotesIcon from '@material-ui/icons/Notes';
 
 import pink from '@material-ui/core/colors/pink';
 import blue from '@material-ui/core/colors/blue';
@@ -44,9 +47,6 @@ const styles = theme => ({
       boxShadow: "1px 5px 25px rgba(0,0,0,0.25)"
     }
   },
-  // avatar: {
-  //   backgroundColor: pink[400],
-  // },
   cardContent: {
     paddingTop: "0",
     paddingBottom: "18px"
@@ -61,28 +61,17 @@ const styles = theme => ({
     width: "100%"
   },
   iconButton: {
-    height: 25, 
-    width: 25, 
-    marginLeft: 10, 
+    height: 36, 
+    width: 36, 
+    marginLeft: 12, 
     position:"absolute", 
     right: 0
   },
-  // actions: {
-  //   display: 'flex',
-  // },
-  // expand: {
-  //   transform: 'rotate(0deg)',
-  //   transition: theme.transitions.create('transform', {
-  //     duration: theme.transitions.duration.shortest,
-  //   }),
-  //   marginLeft: 'auto',
-  //   [theme.breakpoints.up('sm')]: {
-  //     marginRight: -8,
-  //   },
-  // },
-  // expandOpen: {
-  //   transform: 'rotate(180deg)',
-  // },
+  button: {
+    float: "left",
+    margin: theme.spacing.unit / 2,
+    marginLeft: 0,
+  }
 });
 
 class PlaybookCard extends React.Component {
@@ -150,13 +139,11 @@ class PlaybookCard extends React.Component {
     return (
         <Card className={classes.card}>
           <CardHeader
-            // avatar={
-            //   <Avatar aria-label="card-recipe" className={classes.avatar}>
-            //     {this.props.itemTitle[0]}
-            //   </Avatar>
-            // }
             action={
-              <IconButton>
+              <IconButton 
+                // color="primary"
+              >
+                {/* <CheckCircleIcon /> */}
                 <MoreVertIcon />
               </IconButton>
             }
@@ -165,11 +152,11 @@ class PlaybookCard extends React.Component {
               {this.props.itemTitle}
             </Typography>
             }
-            // subheader={<Typography variant="button">Due: <strong>{moment(this.props.itemDueDate).format("M/D/YYYY")}</strong></Typography>}
             subheader={
               <FormControl className={classes.formControl} disabled>
-                <Typography variant="button" noWrap><strong>Due: &nbsp;</strong>
-                  {/* <ButtonBase> */}
+                <Typography variant="button" noWrap>
+                 <DateIcon className={classes.button}/>
+                <strong>Due: &nbsp;</strong>
                     <Input className={classes.input} 
                       value={moment(this.props.itemDueDate).format("M/D/YYYY")} 
                       inputProps={{ 
@@ -178,25 +165,16 @@ class PlaybookCard extends React.Component {
                         }
                       }}
                     />
-                  {/* </ButtonBase> */}
                 </Typography>
               </FormControl>
             }
           />
-          {/* <CardContent className={classes.cardContent}>
-            <FormControl className={classes.formControl} disabled>
-              <Typography variant="button" noWrap>Due: &nbsp;
-                <Input value={moment(this.props.itemDueDate).format("M/D/YYYY")} />
-              </Typography>
-            </FormControl>
-          </CardContent> */}
 
           {/* ItemTasks */}
           <CardContent className={classes.cardContent}>
             {this.props.itemTags.sort().map((tag, index) =>
               <Chip key={index}
                 color={this.assignChipColor(tag)} //built-in colors
-                // style={{backgroundColor: this.assignChipColor(tag)}}
                 label={tag}
                 className={classes.chip}
               />        
@@ -204,7 +182,8 @@ class PlaybookCard extends React.Component {
           </CardContent>
 
           <CardContent className={classes.cardContent}>
-            <Typography variant="body2" component="p">
+            <Typography variant="body2" component="p" noWrap>
+                <NotesIcon className={classes.button}/>
               Notes:
             </Typography>
             <Typography component="p">
@@ -214,11 +193,9 @@ class PlaybookCard extends React.Component {
 
           <CardContent className={classes.cardContent}>
             <FormControl component="fieldset" className={classes.formControl}>
-              {/* <Typography variant="body2"> */}
                 <FormLabel component="legend">
                   <strong>Tasks:</strong>
                 </FormLabel>
-              {/* </Typography> */}
 
               <FormGroup>
                 {this.props.itemTasks.map(itemTask => 
@@ -253,54 +230,6 @@ class PlaybookCard extends React.Component {
               </FormGroup>
             </FormControl>
           </CardContent>
-
-          {/* <CardActions className={classes.actions} disableActionSpacing>
-            <IconButton aria-label="Add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="Share">
-              <ShareIcon />
-            </IconButton>
-            <IconButton
-              className={classnames(classes.expand, {
-                [classes.expandOpen]: this.state.expanded,
-              })}
-              onClick={this.handleExpandClick}
-              aria-expanded={this.state.expanded}
-              aria-label="Show more"
-            >
-              <ExpandMoreIcon />
-            </IconButton>
-          </CardActions>
-          <Collapse in={this.state.expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography paragraph variant="body2">
-                Method:
-              </Typography>
-              <Typography paragraph>
-                Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-                minutes.
-              </Typography>
-              <Typography paragraph>
-                Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high
-                heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly
-                browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving
-                chicken and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion,
-                salt and pepper, and cook, stirring often until thickened and fragrant, about 10
-                minutes. Add saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
-              </Typography>
-              <Typography paragraph>
-                Add rice and stir very gently to distribute. Top with artichokes and peppers, and
-                cook without stirring, until most of the liquid is absorbed, 15 to 18 minutes.
-                Reduce heat to medium-low, add reserved shrimp and mussels, tucking them down into
-                the rice, and cook again without stirring, until mussels have opened and rice is
-                just tender, 5 to 7 minutes more. (Discard any mussels that don’t open.)
-              </Typography>
-              <Typography>
-                Set aside off of the heat to let rest for 10 minutes, and then serve.
-              </Typography>
-            </CardContent>
-          </Collapse> */}
         </Card>
     );
   }
