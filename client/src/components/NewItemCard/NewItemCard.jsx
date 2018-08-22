@@ -65,10 +65,7 @@ const styles = theme => ({
     iconButton: {
         height: 36, 
         width: 36, 
-        marginLeft: 12, 
         marginTop: 12, 
-        position:"absolute", 
-        right: 24
     },
     iconFont: {
         fontSize: 15,
@@ -142,6 +139,8 @@ class NewItemCard extends React.Component {
             itemDescription: this.state.itemDescription,
             itemTasks: this.state.itemTasks,
         }
+
+        this.props.updateParent(newPlaybookItem);
 
         axios.post(`${this.state.apiUrl}`, newPlaybookItem)
         .then(res => {
@@ -395,9 +394,11 @@ render() {
                                     }}
                                 />
                             </Grid>
-                            <IconButton className={classes.iconButton} onClick={this._onDeleteItemTask.bind(this, index)} >
-                              <DeleteIcon color="secondary" className={classes.iconFont}/>
-                            </IconButton>
+                            <Grid item xs={1}>
+                                <IconButton className={classes.iconButton} onClick={this._onDeleteItemTask.bind(this, index)} >
+                                <DeleteIcon color="secondary" className={classes.iconFont}/>
+                                </IconButton>
+                            </Grid>
                         </Grid>
                     )}
                     <br/>

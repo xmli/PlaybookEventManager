@@ -27,6 +27,7 @@ class PlaybookDashboard extends Component {
             apiUrl: "/api/items",
             playbookItems: [],
             didGetPlaybookItems: false,
+            didGetNewItem: this.props.createNewItem !== null,
         }
     }
 
@@ -77,8 +78,22 @@ class PlaybookDashboard extends Component {
         });
     };
 
-    render() {        
-        const { classes, theme } = this.props;
+    render() { 
+        console.log("this.state:", this.state);
+               
+        const { classes } = this.props;
+
+        console.log("this.props.createNewItem:", this.props.createNewItem);
+        if(this.state.didGetNewItem) {
+            let playbookItems = this.state.playbookItems;
+            console.log("playbookItems", playbookItems);
+            
+            playbookItems.push(this.props.createNewItem)
+            this.setState({ 
+                playbookItems,
+                didGetNewItem: false
+            }) 
+        }
 
         if(this.state.didGetPlaybookItems) {
 
