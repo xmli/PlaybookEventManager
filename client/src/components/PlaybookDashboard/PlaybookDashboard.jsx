@@ -3,19 +3,24 @@ import axios from 'axios';
 import classnames from 'classnames';
 
 // material-ui
-import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Paper from '@material-ui/core/Paper';
+import Popper from '@material-ui/core/Popper';
 
-// custom
+//icons
+import AddIcon from '@material-ui/icons/Add';
+import SortIcon from '@material-ui/icons/Sort';
+
+// custom imports
 import PlaybookCard from "../PlaybookCard/PlaybookCard";
+import NewItemCard from '../NewItemCard/NewItemCard';
 // import SearchBar from "../SearchBar/SearchBar";
 
 
@@ -23,22 +28,19 @@ const styles = theme => ({
     root: {
         flexGrow: 1,
         ...theme.mixins.gutters(),
-        paddingTop: theme.spacing.unit * 2,
+        paddingTop: theme.spacing.unit * 6,
         paddingBottom: theme.spacing.unit * 2,
     },
-    //Sort
-    expand: {
-        transform: 'rotate(0deg)',
-        transition: theme.transitions.create('transform', {
-            duration: theme.transitions.duration.shortest,
-        }),
-        marginLeft: 6,
-        [theme.breakpoints.up('sm')]: {
-            marginRight: -8,
-        },
+    //Add Icon
+    fabLow: {
+        position: 'fixed',
+        bottom: theme.spacing.unit * 2,
+        right: theme.spacing.unit * 2,
     },
-    expandOpen: {
-        transform: 'rotate(180deg)',
+    fabHigh: {
+        position: 'fixed',
+        bottom: 56 + 2 * theme.spacing.unit * 2,
+        right: theme.spacing.unit * 2,
     },
 });
 
@@ -55,7 +57,9 @@ class PlaybookDashboard extends Component {
         }
     }
 
-    //fetch data from database
+    /***********************
+     * FETCHES DATA FROM API
+     ***********************/
     componentDidMount() {  
         axios.get(`${this.state.apiUrl}`)
         .then(res => this.setState({ 
@@ -64,14 +68,18 @@ class PlaybookDashboard extends Component {
         .catch(err => console.log(err));
     }
 
-    //Add new Playbook item
+    /*************************************************************
+     * GETS UPDATE FROM PARENT TO RE-RENDER LIST OF PLAYBOOK ITEMS
+     *************************************************************/
     componentWillReceiveProps(nextProps) {
         this.setState({
             playbookItems: [nextProps.newPlaybookItem, ...this.state.playbookItems]
         })
     }
 
-    //Delete Playbook item
+    /****************************************
+     * DELETES PLAYBOOK ITEM BASED ON ITEM ID
+     ****************************************/
     deletePlaybookItem = (itemId) => {
         axios.delete(`${this.state.apiUrl}/${itemId}`)
         .then(res => {
@@ -88,52 +96,53 @@ class PlaybookDashboard extends Component {
         .catch(err => console.error(err));        
     }
 
-    compareTitle = (itemA, itemB) => {
-        return this.compare(itemA, itemB, "itemTitle");
-    }
-
-    compareDueDate = (itemA, itemB) => {
-        return this.compare(itemA, itemB, "itemDueDate");
-    }
-    compare = (itemA, itemB, field) => {
-        if (itemA[field] < itemB[field])
+    /**************************************
+     * CUSTOM COMPARE FUNCTIONS FOR SORTING
+     **************************************/
+    /**
+     * Wrapper function for sorting based on parameter name
+     */
+    compare = (itemA, itemB, parameter) => {
+        if (itemA[parameter] < itemB[parameter])
             return -1;
-        if (itemA[field] > itemB[field])
+        if (itemA[parameter] > itemB[parameter])
             return 1;
         return 0;
-    }      
-    
-    _onTextChange = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value
-        })
-    }
+    }  
 
-    handleChange = name => value => {
-        this.setState({
-          [name]: value,
-        });
-    };
+    compareTitle = (itemA, itemB) => { return this.compare(itemA, itemB, "itemTitle"); }
 
+    compareDueDate = (itemA, itemB) => { return this.compare(itemA, itemB, "itemDueDate"); }    
+ 
+    /**********************************************
+     * SORT FUNCTIONS FOR DISPLAYING PLAYBOOK ITEMS
+     **********************************************/
     sortItemsByTitle = () => {
         this.setState({
-            playbookItems: this.state.playbookItems.sort(this.compareTitle)
+            playbookItems: this.state.playbookItems.sort(this.compareTitle),
+            open: false,
+            expanded: !this.state.expanded,
         });
     }
     sortItemsByDueDate = () => {
         this.setState({
-            playbookItems: this.state.playbookItems.sort(this.compareDueDate)
+            playbookItems: this.state.playbookItems.sort(this.compareDueDate),
+            open: false,
+            expanded: !this.state.expanded,
         });
     }
 
-    handleToggle = () => {
+    /*********************
+     * SORT MENU FUNCTIONS
+     *********************/
+    _handleToggleSortIcon = () => {
         this.setState(state => ({ 
             open: !state.open,
             expanded: !state.expanded,
         }));
       };
     
-    handleClose = event => {
+    _handleCloseMenu = event => {
         if (this.anchorEl.contains(event.target)) {
             return;
         }
@@ -143,55 +152,18 @@ class PlaybookDashboard extends Component {
         });
     };
     
-
+    /*****************
+     * RENDER FUNCTION
+     *****************/
     render() {                
         const { classes } = this.props;
         const { open } = this.state;
 
+        // If elements have been successfully fetched from the API
         if(this.state.playbookItems.length !== 0) {
-
             return (
                 <div className={classes.root}>
                     {/* <SearchBar suggestions={this.state.playbookItems} /> */}
-                    {/* <Button onClick={this.sortItemsByTitle}>Sort by Title</Button> */}
-                    {/* <Button onClick={this.sortItemsByDueDate}>Sort by Due Date</Button> */}
-
-                    <Button
-                        buttonRef={node => {
-                            this.anchorEl = node;
-                        }}
-                        aria-owns={open ? 'menu-list-grow' : null}
-                        aria-haspopup="true"
-                        onClick={this.handleToggle}
-                    >
-                        Sort By 
-                        <ExpandMoreIcon 
-                            className={classnames(classes.expand, {
-                            [classes.expandOpen]: this.state.expanded,
-                        })}/>
-
-                    </Button>
-                    <Popper style={{ zIndex: 1000 }}
-                        open={open} anchorEl={this.anchorEl} transition disablePortal
-                        placement={"bottom-start"}
-                        >
-                        {({ TransitionProps }) => (
-                        <Grow
-                            {...TransitionProps}
-                            id="menu-list-grow"
-                            // style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                        >
-                            <Paper>
-                                <ClickAwayListener onClickAway={this.handleClose}>
-                                    <MenuList>
-                                        <MenuItem onClick={this.sortItemsByTitle}>Title</MenuItem>
-                                        <MenuItem onClick={this.sortItemsByDueDate}>Due Date</MenuItem>
-                                    </MenuList>
-                                </ClickAwayListener>
-                            </Paper>
-                        </Grow>
-                        )}
-                    </Popper>
 
                     <Grid 
                         container 
@@ -200,6 +172,8 @@ class PlaybookDashboard extends Component {
                         alignItems="stretch"
                         direction="row"
                     >
+                        {/**********************************************/}
+                        {/* MAPPING: PLAYBOOK CARDS (CUSTOM COMPONENT) */}
                         {this.state.playbookItems.map(pb_item =>
                             <Grid item xs={12} sm={6} md={4} lg={3} key={pb_item._id}>
                                 <PlaybookCard
@@ -217,6 +191,58 @@ class PlaybookDashboard extends Component {
                             </Grid>
                         )}
                     </Grid>
+
+                    {/********************/}
+                    {/* SORT MENU BUTTON */}
+                    <Button 
+                        variant="fab" 
+                        color="default" 
+                        className={classes.fabHigh}
+                        aria-label="Add" 
+                        buttonRef={node => {
+                            this.anchorEl = node;
+                        }}
+                        aria-owns={open ? 'menu-list-grow' : null}
+                        aria-haspopup="true"
+                        onClick={this._handleToggleSortIcon}
+                    >
+                        <SortIcon />
+                    </Button>
+                        
+                    {/*********************/}
+                    {/* SORT MENU OPTIONS */}
+                    <Popper style={{ zIndex: 1000 }} // Z-index for showing menu on top of underlying elements
+                        open={open} anchorEl={this.anchorEl} transition disablePortal
+                        placement={"bottom-start"}
+                        >
+                        {({ TransitionProps }) => (
+                        <Grow
+                            {...TransitionProps}
+                            id="menu-list-grow"
+                        >
+                            <Paper>
+                                <ClickAwayListener onClickAway={this._handleCloseMenu}>
+                                    <MenuList>
+                                        <MenuItem onClick={this.sortItemsByTitle}>Title</MenuItem>
+                                        <MenuItem onClick={this.sortItemsByDueDate}>Due Date</MenuItem>
+                                    </MenuList>
+                                </ClickAwayListener>
+                            </Paper>
+                        </Grow>
+                        )}
+                    </Popper>
+
+                    {/**************************/}
+                    {/* NEW ITEM CARD FUNCTION */}
+                    <NewItemCard
+                        variant="fab" 
+                        color="primary" 
+                        ariaLabel="Add" 
+                        buttonClass={classes.fabLow} 
+                        addNewPlaybookItem={this.addNewPlaybookItem}
+                    >
+                        <AddIcon />
+                    </NewItemCard>
                 </div>
             );
         }
