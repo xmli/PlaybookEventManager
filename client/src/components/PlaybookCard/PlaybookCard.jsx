@@ -9,6 +9,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
+import Divider from '@material-ui/core/Divider';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
@@ -23,14 +24,22 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DateIcon from '@material-ui/icons/EventAvailable';
 import NotesIcon from '@material-ui/icons/Notes';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 // colors
 import grey from '@material-ui/core/colors/grey';
+
+// custom imports
+import EditItemCard from '../EditItemCard/EditItemCard';
 
 const styles = theme => ({
     anchorTag: {
         textDecoration: "none",
         color: 'rgba(0, 0, 0, 0.87)',
+    },
+    leftIcon: {
+        marginRight: theme.spacing.unit,
     },
     card: {
         height: "100%",
@@ -65,8 +74,11 @@ class PlaybookCard extends React.Component {
         itemTasks: this.props.itemTasks,
         apiUrl: "/api/items",
 
-        //delete
+        //menu for DELETE or EDIT
         anchorEl_menu: null,
+        
+        //edit
+        toEditItemCard: false,
     };
 
     /**********************************
@@ -83,19 +95,30 @@ class PlaybookCard extends React.Component {
      * Closes the dialog
      */
     _handleCloseMenu = () => {
-        this.setState({ anchorEl_menu: null });
+        this.setState({ 
+            anchorEl_menu: null,
+        });
     };
 
 
-    /****************************************
-     * FUNCTIONS FOR DELETING A PLAYBOOK CARD
-     ****************************************/
+    /****************************************************
+     * FUNCTIONS FOR DELETING and EDITING A PLAYBOOK CARD
+     ****************************************************/
     /**
      * Calls parent function to pass data upwards
      */
     _onDeletePlaybookCard = () => {
         this.props.deletePlaybookItem(this.props.itemId);
         this.setState({ anchorEl_menu: null });
+    }
+
+    /**
+     * Passes props to EditItemCard Component
+     */
+    _onEditPlaybookCard = () => {
+        this.setState({ 
+            toEditItemCard: true
+        });
     }
 
     /******************************
@@ -183,8 +206,31 @@ class PlaybookCard extends React.Component {
                                 open={Boolean(this.state.anchorEl_menu)}
                                 onClose={this._handleCloseMenu}
                             >
-                                <MenuItem onClick={this._handleCloseMenu}>Edit</MenuItem>
-                                <MenuItem onClick={this._onDeletePlaybookCard}>Delete</MenuItem>
+                                <EditItemCard open={this.state.toEditItemCard}
+                                    itemId={this.props.itemId}
+                                    itemTitle={this.props.itemTitle}
+                                    itemLinkUrl={this.props.itemLinkUrl}
+                                    itemDescription={this.props.itemDescription}
+                                    itemDueDate={this.props.itemDueDate}
+                                    itemDateAdded={this.props.itemDateAdded}
+                                    itemTags={this.props.itemTags}
+                                    itemTasks={this.props.itemTasks}
+                                >
+                                    <MenuItem onClick={this._onEditPlaybookCard}>
+                                        <EditIcon className={classes.leftIcon}/>
+                                        Edit
+                                    </MenuItem>
+                                </EditItemCard>
+
+                                {/* <MenuItem onClick={this._onEditPlaybookCard}>
+                                    <EditIcon className={classes.leftIcon}/>
+                                    Edit
+                                </MenuItem> */}
+                                <Divider/>
+                                <MenuItem onClick={this._onDeletePlaybookCard}>
+                                    <DeleteIcon className={classes.leftIcon}/>
+                                    Delete
+                                </MenuItem>
                             </Menu>
                         </div>
                     } 

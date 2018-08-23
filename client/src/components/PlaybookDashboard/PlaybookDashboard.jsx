@@ -5,12 +5,14 @@ import axios from 'axios';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+// import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
+// import Typography from '@material-ui/core/Typography';
 
 //icons
 import AddIcon from '@material-ui/icons/Add';
@@ -223,6 +225,12 @@ class PlaybookDashboard extends Component {
                             <Paper>
                                 <ClickAwayListener onClickAway={this._handleCloseMenu}>
                                     <MenuList>
+                                        {/* <MenuItem disabled style={{height: 10, paddingBottom: 6}}>
+                                            <Typography variant="button" style={{fontSize: 12}}>
+                                                Sort By
+                                            </Typography>
+                                        </MenuItem>
+                                        <Divider/> */}
                                         <MenuItem onClick={this.sortItemsByTitle}>Title</MenuItem>
                                         <MenuItem onClick={this.sortItemsByDueDate}>Due Date</MenuItem>
                                     </MenuList>

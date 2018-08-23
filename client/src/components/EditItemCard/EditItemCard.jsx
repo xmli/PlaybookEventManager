@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import * as moment from 'moment';
 
 //material-ui
@@ -72,6 +71,12 @@ const styles = theme => ({
     },
 });
 
+const itemTagList = [
+    "Career",
+    "School",
+    "Family"
+]
+
 const unselectedTagColorMap = {
     "Career": grey[300],
     "School": grey[300],
@@ -84,23 +89,33 @@ const selectedTagColorMap = {
     "Family": grey[600]
 }
 
-class NewItemCard extends React.Component {
+class EditItemCard extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            open: false,
-            itemTagColorMap: unselectedTagColorMap,
+            open: this.props.open,
+            itemTagColorMap: this.setOriginalTagColorMap(this.props.itemTags),
             apiUrl: "/api/items",
     
-            //Controls for New Item
-            itemTitle: "",
-            itemLinkUrl: "",
-            itemDueDate: moment(new Date()).format("YYYY-MM-DD"),
-            itemTags: [],
-            itemDescription: "",
-            itemTasks: [],
+            //Controls for Item
+            itemTitle: this.props.itemTitle,
+            itemLinkUrl: this.props.itemLinkUrl,
+            itemDueDate: moment(this.props.itemDueDate).format("YYYY-MM-DD"),
+            itemTags: this.props.itemTags,
+            itemDescription: this.props.itemDescription,
+            itemTasks: this.props.itemTasks,
         };
+    }
+
+    setOriginalTagColorMap = (tagArray) => {
+        let originalTagColor = JSON.parse(JSON.stringify(unselectedTagColorMap));
+        for(let tag of tagArray) {
+            if(tagArray.includes(tag)) {
+                originalTagColor[tag] = selectedTagColorMap[tag];
+            }
+        }        
+        return originalTagColor;
     }
     
     /*******************************************************
@@ -111,12 +126,12 @@ class NewItemCard extends React.Component {
             open: false,
             itemTagColorMap: unselectedTagColorMap,
 
-            itemTitle: "",
-            itemitemLinkUrl: "",
-            itemDueDate: moment(new Date()).format("YYYY-MM-DD"),
-            itemTags: [],
-            itemDescription: "",
-            itemTasks: [],
+            itemTitle: this.props.itemTitle,
+            itemLinkUrl: this.props.itemLinkUrl,
+            itemDueDate: moment(this.props.itemDueDate).format("YYYY-MM-DD"),
+            itemTags: this.props.itemTags,
+            itemDescription: this.props.itemDescription,
+            itemTasks: this.props.itemTasks,
         });
     }
 
@@ -140,29 +155,29 @@ class NewItemCard extends React.Component {
     /*****************************************************************
      * Once clicked on 'Create' button, function fires to POST request
      *****************************************************************/
-    _onCreateNewItem = () => {
-        let newPlaybookItem = {
+    _onEditItem = () => {
+        let updatedPlaybookItem = {
             itemTitle: this.state.itemTitle,
             itemLinkUrl: this.state.itemLinkUrl,
             itemDueDate: this.state.itemDueDate,
-            itemDateAdded: moment(new Date()).format("YYYY-MM-DD"),
             itemTags: this.state.itemTags,
             itemDescription: this.state.itemDescription,
             itemTasks: this.state.itemTasks,
         }
+
+        console.log("updatedPlaybookItem: ", updatedPlaybookItem);
         
-        // POST request to API
-        axios.post(`${this.state.apiUrl}`, newPlaybookItem)
-        .then(res => {
-            this.setState({
-                open: false
-            });
-            /************************************************************
-            * Calls on parent function to pass the data upwards to parent
-            *************************************************************/
-            this.props.addNewPlaybookItem(res.data);            
+        
+        fetch(`${this.state.apiUrl}/${this.props.itemId}`, {
+            method: 'PUT',
+            body: JSON.stringify(updatedPlaybookItem),
+            headers:{
+                'Content-Type': 'application/json'
+            }
         })
-        .catch(err => console.error(err));
+        .then(res => res.json())
+        .then(resJson => console.log(resJson))
+        .catch(error => console.error('Error:', error));
         
         // Reset to defaults
         this.resetNewItemDefaults();
@@ -275,24 +290,15 @@ class NewItemCard extends React.Component {
     /****************
     * RENDER FUNCTION
     *****************/
-    render() {     
-
+    render() {  
+                
         const { classes } = this.props; 
            
         return (
             <div>
-                {/*********************/}
-                {/* BUTTON FOR DIALOG */}
-                <Button 
-                    variant={this.props.variant}
-                    color={this.props.color}
-                    aria-label={this.props.ariaLabel}
-                    className={this.props.buttonClass}
-                    onClick={this._handleOpen}
-                >
+                <div onClick={this._handleOpen}>
                     {this.props.children}
-                </Button>
-
+                </div>
                 {/********************************/}
                 {/* DIALOG FOR CREATING NEW ITEM */}
                 <Dialog
@@ -310,6 +316,7 @@ class NewItemCard extends React.Component {
                             label="New Playbook Item"
                             type="text"
                             autoFocus
+                            value={this.state.itemTitle}
                             onChange={this.handleChange(`itemTitle`)}
                             fullWidth
                             required={true}
@@ -342,7 +349,7 @@ class NewItemCard extends React.Component {
                         {/***************************/}
                         {/* MAPPING: ITEM TAG CHIPS */}
                         <div className={classes.chipGroup}>
-                            {Object.keys(unselectedTagColorMap).map((tag, index) => 
+                            {itemTagList.map((tag, index) => 
                                 <Chip key={index}
                                     style={{backgroundColor: this.state.itemTagColorMap[tag]}}
                                     label={tag}
@@ -380,6 +387,7 @@ class NewItemCard extends React.Component {
                             className={classes.textField}
                             label="Link"
                             id="itemLinkUrl"
+                            value={this.state.itemLinkUrl}
                             onChange={this.handleChange('itemLinkUrl')}
                             fullWidth
                             InputProps={{
@@ -425,7 +433,7 @@ class NewItemCard extends React.Component {
                                         label="Due Date"
                                         id="itemTaskDueDate"
                                         type="date"
-                                        value={itemTask.itemTaskDueDate}
+                                        value={moment(itemTask.itemTaskDueDate).format("YYYY-MM-DD")}
                                         onChange={this._onChangeItemTaskDueDate(index)}
                                         inputProps={{
                                             style: {
@@ -480,7 +488,7 @@ class NewItemCard extends React.Component {
                     {/* BUTTONS TO CANCEL OR CONFIRM CREATING A NEW ITEM */}
                     <DialogActions>
                         <Button onClick={this._handleClose} color="default" style={{position: "absolute", left: 5}}>Cancel</Button>
-                        <Button onClick={this._onCreateNewItem} variant="contained" color="primary">Create</Button>
+                        <Button onClick={this._onEditItem} variant="contained" color="primary">Confirm</Button>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -488,4 +496,4 @@ class NewItemCard extends React.Component {
     }
 }
 
-export default withStyles(styles)(NewItemCard);
+export default withStyles(styles)(EditItemCard);

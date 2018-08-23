@@ -35,11 +35,20 @@ router.post('/', (req, res) => {
 // @desc: Create an item
 // @access: Public
 router.put('/:id', (req, res) => {        
-    var myquery = { _id:  req.params.id};
+    var myquery = { _id:  req.params.id };
     //When using the $set operator, only the specified fields are updated
     var updates = { $set: 
-        { itemTasks: req.body.itemTasks } 
+        { 
+            itemTitle: req.body.itemTitle,
+            itemLinkUrl: req.body.itemLinkUrl,
+            itemDescription: req.body.itemDescription,
+            itemDueDate: req.body.itemDueDate,
+            itemTags: req.body.itemTags,
+            itemTasks: req.body.itemTasks,
+        } 
     };
+    console.log("updates: ", updates);
+    
     PlaybookItem.updateOne(myquery, updates)
     .then(() => res.json({ success: true }))
     .catch(err => res.status(404).json({ success: false }));
