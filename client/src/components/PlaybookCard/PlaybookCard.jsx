@@ -28,6 +28,10 @@ import NotesIcon from '@material-ui/icons/Notes';
 import grey from '@material-ui/core/colors/grey';
 
 const styles = theme => ({
+    anchorTag: {
+        textDecoration: "none",
+        color: 'rgba(0, 0, 0, 0.87)',
+    },
     card: {
         height: "100%",
         boxShadow: "1px 5px 10px rgba(0,0,0,0.15)",
@@ -187,7 +191,14 @@ class PlaybookCard extends React.Component {
                     title={ 
                         // PLAYBOOK ITEM TITLE
                         <Typography variant="title" gutterBottom>
-                            {this.props.itemTitle}
+                            {this.props.itemLinkUrl !== "" ?
+                            (
+                                <a href={this.props.itemLinkUrl} target="_blank" className={classes.anchorTag}>
+                                    {this.props.itemTitle}
+                                </a>
+                            ) : (
+                                this.props.itemTitle
+                            )}
                         </Typography>
                     }
                     subheader={

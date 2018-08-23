@@ -20,37 +20,30 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
+    constructor(props) {
+        super(props);
 
-  constructor(props) {
-    super(props);
+        this.state = {
+            playbookItems: [],
+        }
 
-    this.state = {
-      newPlaybookItem: null
+        // this.getPlaybookItems = this.getPlaybookItems.bind(this);
     }
-  }
 
-  addNewPlaybookItem = (newPlaybookItem) => {  
-    if(newPlaybookItem != null) {
-      this.setState({
-        newPlaybookItem: newPlaybookItem
-      });
+    render() {
+        return (
+            <div className="App">
+                <MuiThemeProvider theme={theme}>
+                    <AppNavBar 
+                        // playbookItems={this.state.playbookItems} 
+                    />
+                    <PlaybookDashboard 
+                        // getPlaybookItems={this.getPlaybookItems}
+                    />
+                </MuiThemeProvider>
+            </div>
+        );
     }
-  }
-
-  render() {
-    return (
-      <div className="App">
-        <MuiThemeProvider theme={theme}>
-          <AppNavBar 
-            addNewPlaybookItem={this.addNewPlaybookItem}
-          />
-          <PlaybookDashboard 
-            newPlaybookItem={this.state.newPlaybookItem}
-          />
-        </MuiThemeProvider>
-      </div>
-    );
-  }
 }
 
 export default App;

@@ -160,7 +160,10 @@ function MultiValue(props) {
 
 function Menu(props) {
     return (
-        <Paper square className={props.selectProps.classes.paper} {...props.innerProps}>
+        <Paper square className={props.selectProps.classes.paper} 
+            style={{zIndex: 1000}}
+            {...props.innerProps}
+        >
             {props.children}
         </Paper>
     );
@@ -207,16 +210,16 @@ class SearchBar extends React.Component {
 
         return (
         <div className={classes.root}>
-            <Paper className={classes.cardContent}>
+            {/* <Paper className={classes.cardContent}> */}
                 <NoSsr>
                     <Select
                         classes={classes}
                         styles={selectStyles}
                         textFieldProps={{
-                        label: 'Playbook Item',
+                        // label: 'Playbook Item',
                         InputLabelProps: {
-                            shrink: true,
-                        },
+                                shrink: true,
+                            },
                         }}
                         options={suggestions}
                         components={components}
@@ -226,7 +229,7 @@ class SearchBar extends React.Component {
                         isMulti
                     />
                 </NoSsr>
-            </Paper>
+            {/* </Paper> */}
         </div>
         );
     }

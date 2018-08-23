@@ -14,6 +14,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
+//custom import
+import SearchBar from "../SearchBar/SearchBar";
+
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -52,13 +55,6 @@ class AppNavBar extends React.Component {
         this.setState({ anchorEl_menu: null });
     };
 
-    /**
-     * Calls props function to add new item
-     */
-    addNewPlaybookItem = (newPlaybookItem) => {        
-        this.props.addNewPlaybookItem(newPlaybookItem);
-    }
-
     /****************
     * RENDER FUNCTION 
     *****************/
@@ -88,6 +84,8 @@ class AppNavBar extends React.Component {
                         <Typography variant="title" color="inherit" className={classes.flex}>
                             Playbook
                         </Typography>
+
+                        {/* <SearchBar suggestions={this.props.playbookItems} /> */}
 
                         {/**************************/}
                         {/* AUTHENTICATION (TODO) */}

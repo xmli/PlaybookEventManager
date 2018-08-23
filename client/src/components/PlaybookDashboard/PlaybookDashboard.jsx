@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import classnames from 'classnames';
 
 // material-ui
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
 import Grow from '@material-ui/core/Grow';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -66,15 +64,6 @@ class PlaybookDashboard extends Component {
             playbookItems: res.data,
         }))
         .catch(err => console.log(err));
-    }
-
-    /*************************************************************
-     * GETS UPDATE FROM PARENT TO RE-RENDER LIST OF PLAYBOOK ITEMS
-     *************************************************************/
-    componentWillReceiveProps(nextProps) {
-        this.setState({
-            playbookItems: [nextProps.newPlaybookItem, ...this.state.playbookItems]
-        })
     }
 
     /****************************************
@@ -151,6 +140,17 @@ class PlaybookDashboard extends Component {
             expanded: !this.state.expanded,
         });
     };
+
+    /********************************
+     * ADD NEW PLAYBOOK ITEM FUNCTION
+     ********************************/
+    addNewPlaybookItem = (newPlaybookItem) => {
+        if(newPlaybookItem != null) {
+            this.setState({
+                playbookItems: [newPlaybookItem, ...this.state.playbookItems]
+            });
+        }        
+    }
     
     /*****************
      * RENDER FUNCTION

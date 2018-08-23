@@ -16,7 +16,6 @@ import TextField from '@material-ui/core/TextField';
 
 //icons
 import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
 import DateIcon from '@material-ui/icons/EventAvailable';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
